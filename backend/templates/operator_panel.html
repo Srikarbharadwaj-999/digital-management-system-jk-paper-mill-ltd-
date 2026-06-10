@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block body %}
+<main>
+    <section class="hero">
+        <div>
+            <span class="eyebrow">Operator Workspace</span>
+            <h1>Operator Panel</h1>
+            <p>Monitor live camera activity and recent alerts.</p>
+        </div>
+    </section>
+
+    <section class="grid dashboard-grid">
+        <div class="panel camera-panel">
+            <h2>Live Feed</h2>
+            <img class="feed" src="/video_feed" alt="Live Camera">
+        </div>
+        <div class="panel">
+            <h2>Latest Violations</h2>
+            <div class="table compact-table">
+                {% for v in recent %}
+                <a class="row" href="/violations/{{ v.violation_id }}"><span>{{ v.person_name }}</span><span>{{ v.camera_name }}</span><span>{{ v.timestamp.strftime('%H:%M') }}</span><span>{{ v.status }}</span></a>
+                {% else %}<p>No alerts yet.</p>{% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+<main>
+    <section class="hero">
+        <div>
+            <span class="eyebrow">Violation Records</span>
+            <h1>Search & Filter Violations</h1>
+            <p>Filter by person, employee ID, camera, date, known or unknown.</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <form class="filter-form" method="get" action="/violations">
+            <input name="q" placeholder="Search ID / name / code" value="{{ filters.q }}">
+            <select name="camera_name">
+                <option value="">All Cameras</option>
+                {% for cam in cameras %}
+                <option value="{{ cam }}" {% if filters.camera_name == cam %}selected{% endif %}>{{ cam }}</option>
+                {% endfor %}
+            </select>
+            <select name="person_type">
+                <option value="">All Persons</option>
+                <option value="known" {% if filters.person_type == 'known' %}selected{% endif %}>Known</option>
+                <option value="unknown" {% if filters.person_type == 'unknown' %}selected{% endif %}>Unknown</option>
+            </select>
+            <input type="date" name="from_date" value="{{ filters.from_date }}">
+            <input type="date" name="to_date" value="{{ filters.to_date }}">
+            <button>Apply Filter</button>
+            <a class="button secondary" href="/violations">Clear</a>
+        </form>
+    </section>
+
+    <section class="panel">
+        <div class="panel-title">
+            <h2>Violation List</h2>
+            <div><a class="small-btn" href="/api/reports/csv">CSV</a> <a class="small-btn" href="/api/reports/pdf">PDF</a></div>
+        </div>
+        <div class="table violations-table">
+            <div class="row header-row"><span>ID</span><span>Person</span><span>Camera</span><span>Date</span><span>Repeat</span><span>Status</span></div>
+            {% for v in violations %}
+            <a class="row" href="/violations/{{ v.violation_id }}">
+                <span>{{ v.violation_id }}</span>
+                <span>{{ v.person_name }}<small>{{ v.person_code or v.unknown_tracking_id or '' }}</small></span>
+                <span>{{ v.camera_name }}</span>
+                <span>{{ v.timestamp.strftime('%d-%m-%Y %H:%M') }}</span>
+                <span>{{ v.repeat_count }}</span>
+                <span class="pill">{{ v.status }}</span>
+            </a>
+            {% else %}
+            <p>No violations match the selected filters.</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block body %}
+<main>
+    <section class="detail">
+        <div class="panel">
+            <span class="eyebrow">Violation Details</span>
+            <h1>{{ v.violation_id }}</h1>
+            <p><b>Person:</b> {{ v.person_name }}</p>
+            <p><b>Employee ID:</b> {{ v.person_code or 'N/A' }}</p>
+            <p><b>Department:</b> {{ v.department or 'N/A' }}</p>
+            <p><b>Designation:</b> {{ v.designation or 'N/A' }}</p>
+            <p><b>Helmet Status:</b> {{ v.helmet_status }}</p>
+            <p><b>Date & Time:</b> {{ v.timestamp.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+            <p><b>Camera:</b> {{ v.camera_name }}</p>
+            <p><b>Location:</b> {{ v.location }}</p>
+            <p><b>Detection Confidence:</b> {{ '%.2f'|format(v.confidence_score or 0) }}</p>
+            <p><b>Face Score:</b> {{ '%.2f'|format(v.face_score or 0) }}</p>
+            <p><b>Unknown Tracking ID:</b> {{ v.unknown_tracking_id or 'N/A' }}</p>
+            <p><b>Repeat Count:</b> {{ v.repeat_count }}</p>
+            <p><b>Email:</b> {{ 'Sent' if v.email_sent else 'Not Sent' }} {{ v.email_error or '' }}</p>
+            <p><b>SMS:</b> {{ 'Sent' if v.sms_sent else 'Not Sent' }} {{ v.sms_error or '' }}</p>
+            <a class="button" href="/violations/{{ v.violation_id }}/resend">Resend Alert</a>
+        </div>
+
+        <div class="panel">
+            <h2>Snapshot</h2>
+            {% if v.snapshot_path %}
+            <img class="snapshot" src="/snapshots/{{ v.snapshot_path.split('\\')[-1].split('/')[-1] }}">
+            {% else %}
+            <p>No snapshot found.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Repeat Offender History</h2>
+        <div class="table compact-table">
+            {% for item in history %}
+            <a class="row" href="/violations/{{ item.violation_id }}">
+                <span>{{ item.violation_id }}</span>
+                <span>{{ item.person_name }}</span>
+                <span>{{ item.camera_name }}</span>
+                <span>{{ item.timestamp.strftime('%d-%m-%Y %H:%M') }}</span>
+            </a>
+            {% else %}
+            <p>No previous history found.</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

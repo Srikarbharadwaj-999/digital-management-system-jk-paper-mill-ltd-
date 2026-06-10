@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block body %}
+<main>
+    <section class="hero">
+        <div>
+            <span class="eyebrow">Administration</span>
+            <h1>Admin Panel</h1>
+            <p>Manage users, cameras, and key system records.</p>
+        </div>
+    </section>
+
+    <section class="grid">
+        <div class="panel">
+            <h2>Add User</h2>
+            <form class="stack-form" method="post" action="/admin/users/add">
+                <input name="user_id" placeholder="User ID" required>
+                <input name="password" placeholder="Password" required>
+                <select name="role"><option value="operator">Operator</option><option value="admin">Admin</option></select>
+                <button>Add User</button>
+            </form>
+        </div>
+        <div class="panel">
+            <h2>System Summary</h2>
+            <p><b>Users:</b> {{ users|length }}</p>
+            <p><b>Cameras:</b> {{ cameras|length }}</p>
+            <p><b>Recent Persons:</b> {{ persons|length }}</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Users</h2>
+        <div class="table compact-table">
+            {% for u in users %}
+            <div class="row"><span>{{ u.user_id }}</span><span>{{ u.role }}</span><span>{{ 'Active' if u.active else 'Inactive' }}</span><span>{{ u.created_at.strftime('%d-%m-%Y') }}</span></div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

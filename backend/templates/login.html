@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="login-bg">
+
+    <div class="login-card">
+
+        <img src="/static/jk_logo.png"
+             alt="JK Paper Logo"
+             class="login-logo-img">
+
+        <h1>Helmet Violation DMS</h1>
+
+        <p>JK Paper Smart Safety Monitoring System</p>
+
+        {% if request.query_params.get('error') %}
+        <div class="error">
+            Invalid User ID or Password
+        </div>
+        {% endif %}
+
+        <form action="/login" method="post">
+
+            <input
+                type="text"
+                name="user_id"
+                placeholder="User ID"
+                required>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

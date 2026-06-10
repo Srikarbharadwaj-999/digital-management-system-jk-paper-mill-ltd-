@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block body %}
+<main>
+    <section class="hero premium-hero">
+        <div>
+            <span class="eyebrow">Live Safety Command Center</span>
+            <h1>Helmet Violation Monitoring</h1>
+            <p>{{ camera_name }} · {{ camera_location }}</p>
+        </div>
+        <div class="status" id="modelStatus">Checking model...</div>
+    </section>
+
+    <section class="cards">
+        <div class="card"><span>Total Violations</span><b>{{ total_violations }}</b></div>
+        <div class="card"><span>Today</span><b>{{ today_violations }}</b></div>
+        <div class="card"><span>Registered Persons</span><b>{{ people_count }}</b></div>
+        <div class="card danger"><span>Repeat Cases</span><b>{{ repeat_count }}</b></div>
+        <div class="card"><span>Unknown Persons</span><b>{{ unknown_count }}</b></div>
+        <div class="card"><span>Live Identity</span><b id="identity">-</b></div>
+    </section>
+
+    <section class="grid dashboard-grid">
+        <div class="panel camera-panel">
+            <div class="panel-title">
+                <h2>Live Camera Feed</h2>
+                <span id="cameraName">{{ camera_name }}</span>
+            </div>
+            <img class="feed" src="/video_feed" alt="Live Camera">
+            <div class="livebar">
+                <span>People: <b id="people">0</b></span>
+                <span>Vehicles: <b id="vehicles">0</b></span>
+                <span>No Helmet: <b id="nohelmets">0</b></span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">
+                <h2>Recent Violations</h2>
+                <a class="small-btn" href="/violations">View All</a>
+            </div>
+            <div class="table compact-table">
+                {% for v in recent %}
+                <a class="row" href="/violations/{{ v.violation_id }}">
+                    <span>{{ v.violation_id }}</span>
+                    <span>{{ v.person_name }}</span>
+                    <span>{{ v.timestamp.strftime('%d-%m %H:%M') }}</span>
+                    <span class="pill">{{ v.status }}</span>
+                </a>
+                {% else %}
+                <p>No violations recorded yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+async function refreshLiveStats() {
+    const response = await fetch('/api/live_counts');
+    const data = await response.json();
+    people.textContent = data.people;
+    vehicles.textContent = data.vehicles;
+    nohelmets.textContent = data.no_helmets;
+    identity.textContent = data.identity;
+    cameraName.textContent = data.camera + ' · ' + data.location;
+    modelStatus.textContent = data.model_ready ? 'Model Ready' : 'Model Missing';
+    modelStatus.className = data.model_ready ? 'status ok' : 'status bad';
+}
+setInterval(refreshLiveStats, 2000);
+refreshLiveStats();
+</script>
+{% endblock %}

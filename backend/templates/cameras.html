@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block body %}
+<main>
+    <section class="hero">
+        <div>
+            <span class="eyebrow">Multi-Camera Support</span>
+            <h1>Camera Management</h1>
+            <p>Add laptop webcam, IP camera, or RTSP camera sources.</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Add Camera</h2>
+        <form class="camera-form" method="post" action="/cameras/save">
+            <input name="camera_name" placeholder="Camera Name" required>
+            <input name="camera_url" placeholder="0 or rtsp/http camera URL" value="0">
+            <input name="location" placeholder="Location">
+            <button>Add Camera</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Configured Cameras</h2>
+        <div class="table camera-table">
+            <div class="row header-row"><span>Name</span><span>Source</span><span>Location</span><span>Status</span><span>Action</span></div>
+            {% for cam in cameras %}
+            <div class="row">
+                <span>{{ cam.camera_name }}</span>
+                <span>{{ cam.camera_url }}</span>
+                <span>{{ cam.location }}</span>
+                <span class="pill {{ 'ok-pill' if cam.is_active else '' }}">{{ 'Active' if cam.is_active else 'Inactive' }}</span>
+                <span>
+                    {% if not cam.is_active %}<a href="/cameras/activate/{{ cam.id }}">Activate</a> · <a class="danger-link" href="/cameras/delete/{{ cam.id }}">Delete</a>{% else %}Live{% endif %}
+                </span>
+            </div>
+            {% else %}
+            <p>No cameras configured.</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

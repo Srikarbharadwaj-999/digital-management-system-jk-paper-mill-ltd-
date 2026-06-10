@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block body %}
+<main>
+    <section class="hero">
+        <div>
+            <span class="eyebrow">Face Database</span>
+            <h1>Registered Persons</h1>
+            <p>Add, edit, delete, and maintain employee/person face records.</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>{{ 'Edit Person' if edit_person else 'Add Registered Person' }}</h2>
+        <form class="person-form" method="post" action="/persons/save" enctype="multipart/form-data">
+            <input type="hidden" name="person_id" value="{{ edit_person.id if edit_person else 0 }}">
+            <input name="person_code" placeholder="Employee ID / Person Code" value="{{ edit_person.person_code if edit_person else '' }}" required>
+            <input name="name" placeholder="Full Name" value="{{ edit_person.name if edit_person else '' }}" required>
+            <input name="department" placeholder="Department" value="{{ edit_person.department if edit_person else '' }}">
+            <input name="designation" placeholder="Designation" value="{{ edit_person.designation if edit_person else '' }}">
+            <input name="email" placeholder="Email" value="{{ edit_person.email if edit_person else '' }}">
+            <input name="phone" placeholder="Phone" value="{{ edit_person.phone if edit_person else '' }}">
+            <select name="active">
+                <option value="1" {% if not edit_person or edit_person.active %}selected{% endif %}>Active</option>
+                <option value="0" {% if edit_person and not edit_person.active %}selected{% endif %}>Inactive</option>
+            </select>
+            <input type="file" name="photo" accept="image/*">
+            <textarea name="notes" placeholder="Notes">{{ edit_person.notes if edit_person else '' }}</textarea>
+            <button>{{ 'Update Person' if edit_person else 'Add Person' }}</button>
+            {% if edit_person %}<a class="button secondary" href="/persons">Cancel Edit</a>{% endif %}
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>People Database</h2>
+        <div class="table people-table">
+            <div class="row header-row"><span>Code</span><span>Name</span><span>Department</span><span>Phone</span><span>Status</span><span>Action</span></div>
+            {% for p in persons %}
+            <div class="row">
+                <span>{{ p.person_code }}</span>
+                <span>{{ p.name }}</span>
+                <span>{{ p.department or '-' }}</span>
+                <span>{{ p.phone or '-' }}</span>
+                <span class="pill {{ 'ok-pill' if p.active else 'bad-pill' }}">{{ 'Active' if p.active else 'Inactive' }}</span>
+                <span><a href="/persons/edit/{{ p.id }}">Edit</a> · <a class="danger-link" href="/persons/delete/{{ p.id }}" onclick="return confirm('Delete this person?')">Delete</a></span>
+            </div>
+            {% else %}
+            <p>No registered persons.</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

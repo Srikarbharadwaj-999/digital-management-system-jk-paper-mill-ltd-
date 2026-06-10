@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ app_name or 'JK Helmet DMS' }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    {% if user %}
+    <aside class="sidebar">
+        <div class="logo-box">
+            <img src="/static/jk_logo.png"
+                 alt="JK Paper Logo"
+                 class="jk-logo-img">
+
+            <div>
+                <strong>JK Paper</strong>
+                <small>Helmet Violation DMS</small>
+            </div>
+        </div>
+
+        <a href="/">Dashboard</a>
+        <a href="/operator">Operator Panel</a>
+        <a href="/persons">Registered Persons</a>
+        <a href="/violations">Violations</a>
+        <a href="/cameras">Cameras</a>
+        {% if role == 'admin' %}<a href="/admin">Admin Panel</a>{% endif %}
+        <a href="/api/reports/csv">CSV Report</a>
+        <a href="/api/reports/pdf">PDF Report</a>
+        <a href="/logout">Logout</a>
+    </aside>
+    {% endif %}
+
+    <div class="page {% if user %}with-sidebar{% endif %}">
+        {% if user %}
+        <header class="topbar">
+            <div>
+                <strong>{{ app_name }}</strong>
+                <small>Professional Safety Monitoring System</small>
+            </div>
+            <div class="user-chip">{{ role|upper }} · {{ user }}</div>
+        </header>
+        {% endif %}
+
+        {% block body %}{% endblock %}
+    </div>
+</body>
+</html>
