@@ -1,34 +1,34 @@
 # JK Helmet Violation Digital Management System
 
-This ZIP continues the existing FastAPI + SQLite + YOLO project. It does **not** rebuild the project from scratch.
+A FastAPI, SQLite, and YOLO-based digital management system for detecting and managing helmet violations in an industrial environment.
 
-## Added / Upgraded Features
+## Key Features
 
-- Premium JK Paper corporate dashboard UI
-- Mobile responsive layout
-- Add / edit / delete registered persons
-- Department and designation fields for registered persons
-- Live person identification display
-- Real no-helmet workflow with snapshot + database record
-- Violation details page with repeat history
-- Email alert with snapshot attachment
-- Twilio SMS alert support
-- Search and filter violations
-- CSV report export
-- PDF report export using ReportLab
-- Multi-camera management
-- Admin panel
-- Operator panel
-- Unknown person tracking
-- Repeat offender count
-- LAN deployment-ready command
+* Corporate-style responsive dashboard UI
+* Registered person management
+* Add, edit, and delete registered persons
+* Department and designation details
+* Live person identification display
+* No-helmet detection workflow
+* Violation snapshot capture
+* Violation database records
+* Violation details page
+* Repeat offender tracking
+* Unknown person tracking
+* Search and filter violations
+* CSV report export
+* PDF report export
+* Multi-camera management
+* Admin panel
+* Operator panel
+* Email alert support
+* SMS alert support
+* LAN deployment support
 
 ## Default Login
 
-```text
-User ID : admin
+User ID: admin
 Password: admin123
-```
 
 ## Run on Windows
 
@@ -53,7 +53,7 @@ http://127.0.0.1:8000
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-Then open from another device on the same Wi-Fi:
+Open from another device on the same Wi-Fi:
 
 ```text
 http://YOUR_LAPTOP_IP:8000
@@ -61,13 +61,13 @@ http://YOUR_LAPTOP_IP:8000
 
 ## YOLO Model Setup
 
-Place the trained helmet model here:
+Place the trained helmet detection model here:
 
 ```text
 backend/models/best.pt
 ```
 
-Your model should ideally contain class names similar to:
+Recommended class names:
 
 ```text
 helmet
@@ -76,32 +76,30 @@ person
 motorcycle
 ```
 
-The workflow logs violations only when a `no_helmet` style class is detected.
+The system logs a violation when a no-helmet class is detected.
 
-## Email / SMS Setup
+## Alert Configuration
 
-Edit:
+Update environment variables in:
 
 ```text
 backend/.env
 ```
 
-Required values:
+Required configuration values:
 
 ```text
 OPERATOR_EMAIL=
 OPERATOR_PHONE=
 SMTP_USER=
-SMTP_PASSWORD=
-SMS_API_KEY=
-SMS_API_SECRET=
-SMS_SENDER_ID=
+SMTP_PASSWORD
 ```
 
-For Gmail SMTP, use an app password instead of your normal Gmail password.
+For Gmail SMTP, use an app password instead of a normal Gmail password.
 
 ## Notes
 
-- Existing structure is preserved.
-- SQLite migrations are handled inside `database.py` using a small helper.
-- The current face matcher is still lightweight and demo-friendly. For production-level accuracy, replace it later with DeepFace, InsightFace, or face_recognition.
+* Existing project structure is preserved.
+* SQLite migration handling is included in `database.py`.
+* The current face matching module is lightweight and suitable for demonstration.
+* For production-level accuracy, future upgrades may include DeepFace, InsightFace, or face_recognition.
