@@ -1,4 +1,4 @@
-# JK Helmet Violation Digital Management System - Pro
+# JK Helmet Violation Digital Management System
 
 This ZIP continues the existing FastAPI + SQLite + YOLO project. It does **not** rebuild the project from scratch.
 
